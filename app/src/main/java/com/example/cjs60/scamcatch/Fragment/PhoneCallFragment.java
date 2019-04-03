@@ -1,11 +1,10 @@
 package com.example.cjs60.scamcatch.Fragment;
 
-import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +15,17 @@ import com.example.cjs60.scamcatch.MainActivity;
 import com.example.cjs60.scamcatch.R;
 
 
+@SuppressLint("ValidFragment")
 public class PhoneCallFragment extends Fragment {
     View view; //
-    private Button one,two,three,four,five,six,seven,eight,nine,zero,call,del; //레이아웃에 있는 버튼을 받기위한 변수 선언.
     private TextView callText; //레이아웃에 있는 번호적는 Text를 받기위한 변수 선언.
     private String Enum;
+    MainActivity mainActivity;
+
+    @SuppressLint("ValidFragment")
+    public PhoneCallFragment(MainActivity mActivity){ //PhoneCallFragment 생성자 (생성자란 이 클래스가 만들어질때 무조건 실행됨)
+        mainActivity = mActivity; //메인엑티비티를 가져와서 메인엑티비티의 메소드를 사용할 수 있게 한다.
+    }
 
     @Override //프래그먼트 생성시에 한번 실행되는 메소드
     public void onCreate(Bundle savedInstanceState) {
@@ -37,30 +42,18 @@ public class PhoneCallFragment extends Fragment {
 
     //레이아웃의 객체들과 변수들을 연결하는 메소드. 항상 제일 먼저 선언되어야 한다.
         private void SetLayout(View view){
-        one = (Button)view.findViewById(R.id.onebtn);
-        one.setOnClickListener(onClickListener);
-        two = (Button)view.findViewById(R.id.twobtn);
-        two.setOnClickListener(onClickListener);
-        three = (Button)view.findViewById(R.id.thirdbtn);
-        three.setOnClickListener(onClickListener);
-        four = (Button)view.findViewById(R.id.fourbtn);
-        four.setOnClickListener(onClickListener);
-        five = (Button)view.findViewById(R.id.fivebtn);
-        five.setOnClickListener(onClickListener);
-        six = (Button)view.findViewById(R.id.sixbtn);
-        six.setOnClickListener(onClickListener);
-        seven = (Button)view.findViewById(R.id.sevenbtn);
-        seven.setOnClickListener(onClickListener);
-        eight = (Button)view.findViewById(R.id.eigthbtn);
-        eight.setOnClickListener(onClickListener);
-        nine = (Button)view.findViewById(R.id.ninebtn);
-        nine.setOnClickListener(onClickListener);
-        zero = (Button)view.findViewById(R.id.zerobtn);
-        zero.setOnClickListener(onClickListener);
-        call = (Button)view.findViewById(R.id.callbtn);
-        call.setOnClickListener(onClickListener);
-        del = (Button)view.findViewById(R.id.delbtn);
-        del.setOnClickListener(onClickListener);
+        view.findViewById(R.id.onebtn).setOnClickListener(onClickListener);
+        view.findViewById(R.id.twobtn).setOnClickListener(onClickListener);
+        view.findViewById(R.id.thirdbtn).setOnClickListener(onClickListener);
+        view.findViewById(R.id.fourbtn).setOnClickListener(onClickListener);
+        view.findViewById(R.id.fivebtn).setOnClickListener(onClickListener);
+        view.findViewById(R.id.sixbtn).setOnClickListener(onClickListener);
+        view.findViewById(R.id.sevenbtn).setOnClickListener(onClickListener);
+        view.findViewById(R.id.eigthbtn).setOnClickListener(onClickListener);
+        view.findViewById(R.id.ninebtn).setOnClickListener(onClickListener);
+        view.findViewById(R.id.zerobtn).setOnClickListener(onClickListener);
+        view.findViewById(R.id.callbtn).setOnClickListener(onClickListener);
+        view.findViewById(R.id.delbtn).setOnClickListener(onClickListener);
         callText = (TextView)view.findViewById(R.id.callEditText);
     }
     //버튼 클릭 이벤트를 담은 메소드.
