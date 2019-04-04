@@ -41,8 +41,9 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, phoneCallFragment).commit();
     }
 
-    public void ChangeCallActivity(){
+    public void ChangeCallActivity(String callNumber){
         Intent intent = new Intent(getApplicationContext(),CallActivity.class);
+        intent.putExtra("phone",callNumber);
         startActivity(intent);
     }
 

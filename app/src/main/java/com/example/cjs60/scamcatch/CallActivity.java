@@ -1,10 +1,15 @@
 package com.example.cjs60.scamcatch;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.microsoft.cognitiveservices.speech.ResultReason;
@@ -19,46 +24,76 @@ import static android.Manifest.permission.RECORD_AUDIO;
 
 public class CallActivity extends AppCompatActivity {
 
-    private static String speechSubscriptionKey = "2d47191c07c64a6aa14624bde86e8950";
-    private static String serviceRegion = "westus";
+
+    public TextView timer;
+    public TextView phoneNum;
+    public TextView stt;
+    public String phone;
+    public long myBaseTime;
+    public SpeechToText speechToText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.call_activity);
 
+        SetLayout();
+        SetPhoneNum();
+
+        myBaseTime = SystemClock.elapsedRealtime();
+        myTimer.sendEmptyMessage(0);
         // Note: we need to request the permissions
         int requestCode = 5; // unique code for the permission request
         ActivityCompat.requestPermissions(this, new String[]{RECORD_AUDIO, INTERNET}, requestCode);
+        speechToText = new SpeechToText(stt);
+        speechToText.execute();
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        speechToText.cancel(true);
     }
 
-    public void onSpeechButtonClicked(View v) {
-        TextView txt = (TextView) this.findViewById(R.id.speechToText); // 'hello' is the ID of your text view
+    public void SetLayout(){
+        findViewById(R.id.endCallBtn).setOnClickListener(onClickListener);
+        timer = (TextView)findViewById(R.id.timer);
+        phoneNum = (TextView)findViewById(R.id.phoneNum);
+        stt = (TextView)findViewById(R.id.speechToText);
+    }
 
-        try {
-            SpeechConfig config = SpeechConfig.fromSubscription(speechSubscriptionKey, serviceRegion);
-            assert(config != null);
-
-            SpeechRecognizer reco = new SpeechRecognizer(config);
-            assert(reco != null);
-
-            Future<SpeechRecognitionResult> task = reco.recognizeOnceAsync();
-            assert(task != null);
-
-            SpeechRecognitionResult result = task.get();
-            assert(result != null);
-
-            if (result.getReason() == ResultReason.RecognizedSpeech) {
-                txt.setText(result.toString());
+    //버튼 클릭 이벤트를 담은 메소드.
+    Button.OnClickListener onClickListener = new Button.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.endCallBtn:
+                    finish();
+                    break;
             }
-            else {
-                txt.setText(result.toString());
-            }
-
-            reco.close();
-        } catch (Exception ex) {
-            Log.e("SpeechSDKDemo", "unexpected " + ex.getMessage());
-            assert(false);
         }
+    };
+
+    public void SetPhoneNum(){
+        Intent intent = getIntent();
+        phone = intent.getStringExtra("phone");
+        phoneNum.setText(phone.substring(0,3)+'-'+phone.substring(3,7)+'-'+phone.substring(7,11));
+    }
+
+
+    Handler myTimer = new Handler(){
+        public void handleMessage(Message msg){
+            timer.setText(getTimeOut());
+
+            //sendEmptyMessage 는 비어있는 메세지를 Handler 에게 전송하는겁니다.
+            myTimer.sendEmptyMessage(0);
+        }
+    };
+    //현재시간을 계속 구해서 출력하는 메소드
+    String getTimeOut(){
+        long now = SystemClock.elapsedRealtime(); //애플리케이션이 실행되고나서 실제로 경과된 시간(??)^^;
+        long outTime = now - myBaseTime;
+        String easy_outTime = String.format("%02d:%02d", outTime/1000 / 60, (outTime/1000)%60);
+        return easy_outTime;
+
     }
 }
