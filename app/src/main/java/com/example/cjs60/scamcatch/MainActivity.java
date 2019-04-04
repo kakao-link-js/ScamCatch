@@ -3,7 +3,6 @@ package com.example.cjs60.scamcatch;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -42,8 +41,9 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, phoneCallFragment).commit();
     }
 
-    public void ChangeCallFragment(){
-
+    public void ChangeCallActivity(){
+        Intent intent = new Intent(getApplicationContext(),CallActivity.class);
+        startActivity(intent);
     }
 
     //권한있는지 없는지 확인

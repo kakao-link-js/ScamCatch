@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">ScamCatch</string>
+    <string name="primaryKey">4d2290fe-7cc5-4881-a86e-02f303cb3237</string>
+    <string name="add_subscription_key_tip_title">2d47191c07c64a6aa14624bde86e8950</string>
+    <string name="add_subscription_key_tip">Please put your subscription key to source file \"app/res/values/strings.xml\" to enable Speech API calls.</string>
+
+    <!--
+    Enter an optional authentication Uri such as:
+    https://westus.api.cognitive.microsoft.com/sts/v1.0/issuetoken
+    -->
+    <string name="authenticationUri"></string>
+
+    <string name="luisAppID">yourLuisAppID</string>
+    <string name="luisSubscriptionID">yourLuisSubscriptionID</string>
+
+    <string name="action_settings">Settings</string>
 </resources>

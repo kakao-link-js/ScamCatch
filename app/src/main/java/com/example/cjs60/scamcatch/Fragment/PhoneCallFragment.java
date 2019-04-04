@@ -99,9 +99,10 @@ public class PhoneCallFragment extends Fragment {
                 case R.id.callbtn:
                     Enum = callText.getText().toString();
                     String tel = "tel:" + Enum;
-                    Intent intent = new Intent(Intent.ACTION_CALL);
-                    intent.setData(Uri.parse(tel));
-                    startActivity(intent);
+                    mainActivity.ChangeCallActivity();
+//                    Intent intent = new Intent(Intent.ACTION_CALL);
+//                    intent.setData(Uri.parse(tel));
+//                    startActivity(intent);
                     break;
             }
         }
