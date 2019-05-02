@@ -17,9 +17,23 @@
             </intent-filter>
         </activity>
         <activity android:name=".CallActivity"/>
+        <receiver
+            android:name=".IncomingCallBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true"
+            android:label="CallCheckReceiver"
+            android:process=".cCallCheckReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
+                <action android:name="android.intent.action.PHONE_STATE" />
+            </intent-filter>
+        </receiver>
     </application>
     <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.READ_CALL_LOG"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+
+
 
 </manifest>
