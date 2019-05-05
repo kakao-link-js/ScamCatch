@@ -18,21 +18,20 @@
         </activity>
         <activity android:name=".CallActivity"/>
         <receiver
-            android:name=".IncomingCallBroadcastReceiver"
-            android:enabled="true"
-            android:exported="true"
-            android:label="CallCheckReceiver"
-            android:process=".cCallCheckReceiver">
+            android:name=".IncomingCallBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
                 <action android:name="android.intent.action.PHONE_STATE" />
             </intent-filter>
         </receiver>
+        <service android:name=".CallingService"/>
     </application>
     <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.READ_CALL_LOG"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+
 
 
 

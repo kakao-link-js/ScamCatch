@@ -1,8 +1,12 @@
 package com.example.cjs60.scamcatch;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,6 +15,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 
 import com.example.cjs60.scamcatch.Fragment.ContactListFragment;
@@ -49,16 +54,34 @@ public class MainActivity extends AppCompatActivity {
 
     //권한있는지 없는지 확인
     public void PermissionCheck(){
-        ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.READ_PHONE_STATE},0); //전화 상태를 읽을 수 있는 퍼미션
-        if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_DENIED)
-            ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.CALL_PHONE},0); //전화거는 퍼미션
-        if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_DENIED)
-            ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.READ_CALL_LOG},0); //기록받아오는 퍼미션
-        if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_DENIED)
-            ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.RECORD_AUDIO},0); //오디오기록 퍼미션
-        if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_DENIED)
-            ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.READ_PHONE_STATE},0); //전화 상태를 읽을 수 있는 퍼미션
+        if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_DENIED||
+                ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_DENIED||
+                ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_DENIED||
+                ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_DENIED
+                )
+            ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.CALL_PHONE,//전화거는 퍼미션
+                    Manifest.permission.READ_CALL_LOG, //기록받아오는 퍼미션
+                    Manifest.permission.RECORD_AUDIO, //오디오기록 퍼미션
+                    Manifest.permission.READ_PHONE_STATE //전화 상태를 읽을 수 있는 퍼미션
+            },0);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { // SDK26 이상 부터 다른위에 그리기 권한 가져와야함
+            if (!Settings.canDrawOverlays(getApplicationContext())) {
+                checkOverlayPermission();
+            }
+        }
     }
+
+    //다른앱위에 그리는 권한은 매우 위험한 선택이라 이렇게 메소드로 환경설정으로 보냄
+    private void checkOverlayPermission() {
+        try {
+            Uri uri = Uri.parse("package:" + getPackageName());
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, uri);
+            startActivityForResult(intent, 5469);
+        } catch (Exception e) {
+            //toast(e.toString());
+        }
+    }
+
 
     //레이아웃들의 객체와 코드의 변수들을 연결
     public void SetLayout(){
