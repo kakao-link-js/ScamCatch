@@ -20,21 +20,25 @@ public class IncomingCallBroadcastReceiver extends BroadcastReceiver {
     // 전화번호
     private static String phoneNumber = "";
     // incoming 수신 플래그
-    private static String incomingFlag;
+    private static boolean incomingFlag = true;
     //
     Bundle bundle;
     @Override
     public void onReceive(final Context context, Intent intent) {
         bundle = intent.getExtras();
-
-        // 여기부터 브로드케스트를 두번 틀지 않게 하기 위한 구문
-        String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
-        if(state.equals(incomingFlag)){
+        if(incomingFlag){
+            incomingFlag = false;
             return;
         }
-        else{
-            incomingFlag = state;
-        }
+
+        // 여기부터 브로드케스트를 두번 틀지 않게 하기 위한 구문
+//        String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
+//        if(state.equals(incomingFlag)){
+//            return;
+//        }
+//        else{
+//            incomingFlag = state;
+//        }
         //여기까지
 
         // TODO Auto-generated method stub
@@ -55,15 +59,18 @@ public class IncomingCallBroadcastReceiver extends BroadcastReceiver {
                 this.phoneNumber = bundle.getString(TelephonyManager.EXTRA_INCOMING_NUMBER);;
                 intentNum = intent.getStringExtra("incoming_number");
                 Toast.makeText(context, "벨이 울리고 있다. " + phoneNumber + " // intent : "+ intentNum, Toast.LENGTH_SHORT).show();
-                //OpenService(intent,context);
+                if(!CallingService.itIsOpen)
+                    OpenService(intent,context);
                 break;
         }
     }
 
     public void OpenService(Intent intent,Context context){
-        final String phone_number =phoneNumber;
+        final String phone_number = phoneNumber;
+        CallingService.itIsOpen = true;
         Intent serviceIntent = new Intent(context, CallingService.class);
         serviceIntent.putExtra(CallingService.EXTRA_CALL_NUMBER, phone_number);
+        Log.d("CallingService","phone_number : "+phone_number + "  phoneNumber : "+ phoneNumber);
         context.startForegroundService(serviceIntent);
     }
 

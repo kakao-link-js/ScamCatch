@@ -3,9 +3,9 @@ package com.example.cjs60.scamcatch;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.PixelFormat;
-import android.os.Build;
 import android.os.IBinder;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -21,6 +21,8 @@ public class CallingService extends Service {
 
     public static final String EXTRA_CALL_NUMBER = "call_number";
     protected View rootView;
+    public static boolean itIsOpen = false;
+    public String TAG = "CallingService";
 
 
     @BindView(R.id.tv_call_number)
@@ -42,6 +44,7 @@ public class CallingService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.d(TAG,"start onCreate");
 
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 
@@ -62,14 +65,16 @@ public class CallingService extends Service {
 
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         rootView = layoutInflater.inflate(R.layout.called_layout, null);
+        tv_call_number = (TextView)rootView.findViewById(R.id.tv_call_number);
         ButterKnife.bind(this, rootView);
         setDraggable();
+        Log.d(TAG,"finish onCreate");
     }
 
 
 
     private void setDraggable() {
-
+        Log.d(TAG,"start setDraggable");
         rootView.setOnTouchListener(new View.OnTouchListener() {
             private int initialX;
             private int initialY;
@@ -103,21 +108,27 @@ public class CallingService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d(TAG,"start onStartCommand");
+
         windowManager.addView(rootView, params);
         setExtra(intent);
         if (!TextUtils.isEmpty(call_number)) {
             tv_call_number.setText(call_number);
         }
+        Log.d(TAG,"end onStartCommand call_number : " +call_number);
         return START_REDELIVER_INTENT;
     }
 
     //intent 에 넣은 번호를 받아온다.
     private void setExtra(Intent intent) {
+        Log.d(TAG,"start setExtra");
+
         if (intent == null) {
             removePopup();
             return;
         }
         call_number = intent.getStringExtra(EXTRA_CALL_NUMBER);
+        Log.d(TAG,"end setExtra call_number : " + call_number);
     }
 
 
