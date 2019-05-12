@@ -1,6 +1,7 @@
 package com.example.cjs60.scamcatch;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,7 +11,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+
+import com.example.cjs60.scamcatch.Server.NetworkTask;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import static android.Manifest.permission.INTERNET;
 import static android.Manifest.permission.RECORD_AUDIO;
@@ -24,6 +31,7 @@ public class CallActivity extends AppCompatActivity {
     public String phone;
     public long myBaseTime;
     public SpeechToText speechToText;
+    public NetworkTask networkTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +51,10 @@ public class CallActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        speechToText.cancel(true);
+        if(networkTask.getStatus() == AsyncTask.Status.RUNNING)
+            networkTask.cancel(true);
+        if(speechToText.getStatus() == AsyncTask.Status.RUNNING)
+            speechToText.cancel(true);
     }
 
     public void SetLayout(){
@@ -51,6 +62,7 @@ public class CallActivity extends AppCompatActivity {
         timer = (TextView)findViewById(R.id.timer);
         phoneNum = (TextView)findViewById(R.id.phoneNum);
         stt = (TextView)findViewById(R.id.speechToText);
+        findViewById(R.id.send).setOnClickListener(onClickListener);
     }
 
     //버튼 클릭 이벤트를 담은 메소드.
@@ -59,7 +71,14 @@ public class CallActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.endCallBtn:
+                    if(networkTask.getStatus() == AsyncTask.Status.RUNNING)
+                        networkTask.cancel(true);
+                    if(speechToText.getStatus() == AsyncTask.Status.RUNNING)
+                        speechToText.cancel(true);
                     finish();
+                    break;
+                case R.id.send:
+                    sendToServer();
                     break;
             }
         }
@@ -80,12 +99,37 @@ public class CallActivity extends AppCompatActivity {
             myTimer.sendEmptyMessage(0);
         }
     };
+
     //현재시간을 계속 구해서 출력하는 메소드
     String getTimeOut(){
         long now = SystemClock.elapsedRealtime(); //애플리케이션이 실행되고나서 실제로 경과된 시간(??)^^;
         long outTime = now - myBaseTime;
         String easy_outTime = String.format("%02d:%02d", outTime/1000 / 60, (outTime/1000)%60);
         return easy_outTime;
+    }
 
+    //서버에 요청할 데이터
+    private JSONObject FormatingData(String myNum, String yourNum){
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.accumulate("my_phone_num", myNum);
+            jsonObject.accumulate("opponent_phone_num", yourNum);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
+    private void sendToServer() {
+        String url = "http://52.247.220.74/test";
+
+        JSONObject jsonObject = FormatingData("01012341234", "01046589742");
+        networkTask = new NetworkTask(getApplicationContext(), url, jsonObject);
+        try {
+            String result = networkTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
+            Toast.makeText(this,"result : "+ result,Toast.LENGTH_SHORT).show();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

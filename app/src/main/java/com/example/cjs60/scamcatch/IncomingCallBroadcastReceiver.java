@@ -20,25 +20,22 @@ public class IncomingCallBroadcastReceiver extends BroadcastReceiver {
     // 전화번호
     private static String phoneNumber = "";
     // incoming 수신 플래그
-    private static boolean incomingFlag = true;
+    private static boolean incomingFlag = true; //첫번째 브로드케스트에서는 값이 안와서 한번 다시 켜기위한 변수
+    private static boolean callState; //통화를 받으면 true 로 바껴서 브로드캐스트를 또 안만듬
+    public CallingService callingService;
     //
     Bundle bundle;
     @Override
     public void onReceive(final Context context, Intent intent) {
         bundle = intent.getExtras();
         if(incomingFlag){
+            callState = false;
             incomingFlag = false;
+            return;
+        }else if(callState){
             return;
         }
 
-        // 여기부터 브로드케스트를 두번 틀지 않게 하기 위한 구문
-//        String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
-//        if(state.equals(incomingFlag)){
-//            return;
-//        }
-//        else{
-//            incomingFlag = state;
-//        }
         //여기까지
 
         // TODO Auto-generated method stub
@@ -58,9 +55,17 @@ public class IncomingCallBroadcastReceiver extends BroadcastReceiver {
                 // TODO 전화를 왔을때이다. (벨이 울릴때)
                 this.phoneNumber = bundle.getString(TelephonyManager.EXTRA_INCOMING_NUMBER);;
                 intentNum = intent.getStringExtra("incoming_number");
-                Toast.makeText(context, "벨이 울리고 있다. " + phoneNumber + " // intent : "+ intentNum, Toast.LENGTH_SHORT).show();
+                Log.d("CallingService", "벨이 울리고 있다. " + phoneNumber + " // intent : "+ intentNum);
                 if(!CallingService.itIsOpen)
                     OpenService(intent,context);
+                break;
+            case TelephonyManager.CALL_STATE_OFFHOOK:
+                callState = true;
+                Log.d("CallingService","전화를 받았다.");
+                break;
+            case TelephonyManager.CALL_STATE_IDLE:
+                callState = false;
+                Log.d("CallingService","전화를 끊었다.");
                 break;
         }
     }

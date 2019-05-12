@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -27,6 +28,7 @@ public class CallingService extends Service {
 
     @BindView(R.id.tv_call_number)
     TextView tv_call_number;
+    Button btn;
 
     String call_number;
 
@@ -52,7 +54,6 @@ public class CallingService extends Service {
 
         int width = (int) (display.getWidth() * 0.9); //Display 사이즈의 90%
 
-
         params = new WindowManager.LayoutParams(
                 width,
                 WindowManager.LayoutParams.WRAP_CONTENT,
@@ -66,6 +67,7 @@ public class CallingService extends Service {
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         rootView = layoutInflater.inflate(R.layout.called_layout, null);
         tv_call_number = (TextView)rootView.findViewById(R.id.tv_call_number);
+        rootView.findViewById(R.id.btn_close).setOnClickListener(onClickListener);
         ButterKnife.bind(this, rootView);
         setDraggable();
         Log.d(TAG,"finish onCreate");
@@ -138,9 +140,20 @@ public class CallingService extends Service {
         removePopup();
     }
 
+    Button.OnClickListener onClickListener = new Button.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.btn_close:
+                    removePopup();
+                    break;
+            }
+        }
+    };
 
-    @OnClick(R.id.btn_close)
+
     public void removePopup() {
+        Log.d(TAG,"removePopup");
         if (rootView != null && windowManager != null) windowManager.removeView(rootView);
     }
 }
