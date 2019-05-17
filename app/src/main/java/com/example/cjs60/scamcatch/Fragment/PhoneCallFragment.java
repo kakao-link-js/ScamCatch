@@ -1,8 +1,6 @@
 package com.example.cjs60.scamcatch.Fragment;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.cjs60.scamcatch.MainActivity;
 import com.example.cjs60.scamcatch.R;
@@ -19,7 +18,6 @@ import com.example.cjs60.scamcatch.R;
 public class PhoneCallFragment extends Fragment {
     View view; //
     private TextView callText; //레이아웃에 있는 번호적는 Text를 받기위한 변수 선언.
-    private String Enum;
     MainActivity mainActivity;
 
     @SuppressLint("ValidFragment")
@@ -97,11 +95,12 @@ public class PhoneCallFragment extends Fragment {
                         callText.setText(text.substring(0, text.length() - 1)); //전체길이에서 1만 뺀다.
                     break;
                 case R.id.callbtn:
-                    Enum = callText.getText().toString();
-                    String tel = "tel:" + Enum;
-                    Intent intent = new Intent(Intent.ACTION_CALL);
-                    intent.setData(Uri.parse(tel));
-                    startActivity(intent);
+                    if(callText.getText().length()>10) {
+                        mainActivity.ChangeCallActivity((String) callText.getText());
+                    }
+                    else{
+                        Toast.makeText(getContext(),"맞는 번호를 입력하세요",Toast.LENGTH_SHORT);
+                    }
                     break;
             }
         }
