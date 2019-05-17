@@ -1,12 +1,13 @@
 package com.example.cjs60.scamcatch;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
+import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,21 +15,26 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 
-import com.example.cjs60.scamcatch.Fragment.ContactListFragment;
+import com.example.cjs60.scamcatch.Fragment.Address.AddressFragment;
 import com.example.cjs60.scamcatch.Fragment.PhoneCallFragment;
 import com.example.cjs60.scamcatch.Fragment.RecentCallListFragment;
 import com.example.cjs60.scamcatch.Fragment.SettingFragment;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
     PhoneCallFragment phoneCallFragment;
     RecentCallListFragment recentCallListFragment;
     SettingFragment settingFragment;
-    ContactListFragment contactListFragment;
+    AddressFragment contactListFragment;
+
+    private ArrayList<String> nameList;
+    private ArrayList<String> numberList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) { //무조건 이거부터 실행됨.
@@ -40,7 +46,9 @@ public class MainActivity extends AppCompatActivity {
         phoneCallFragment = new PhoneCallFragment(this); //PhoneCallFragment로 넘어가기 위한 객체 생성
         recentCallListFragment = new RecentCallListFragment(); //객체 생성
         settingFragment = new SettingFragment(); //객체 생성
-        contactListFragment = new ContactListFragment(); //객체 생성
+        contactListFragment = new AddressFragment(); //객체 생성
+
+        getAddressBooks();
 
         //activity_main에 있는 main_frame에 phoneCallFragment를 씌운다
         getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, phoneCallFragment).commit();
@@ -57,12 +65,14 @@ public class MainActivity extends AppCompatActivity {
         if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_DENIED||
                 ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_DENIED||
                 ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_DENIED||
-                ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_DENIED
+                ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_DENIED||
+                ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_DENIED
                 )
             ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.CALL_PHONE,//전화거는 퍼미션
                     Manifest.permission.READ_CALL_LOG, //기록받아오는 퍼미션
                     Manifest.permission.RECORD_AUDIO, //오디오기록 퍼미션
-                    Manifest.permission.READ_PHONE_STATE //전화 상태를 읽을 수 있는 퍼미션
+                    Manifest.permission.READ_PHONE_STATE, //전화 상태를 읽을 수 있는 퍼미션
+                    Manifest.permission.READ_CONTACTS
             },0);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { // SDK26 이상 부터 다른위에 그리기 권한 가져와야함
             if (!Settings.canDrawOverlays(getApplicationContext())) {
@@ -119,5 +129,46 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.replace(R.id.main_frame, fragment);
         fragmentTransaction.commit();
+    }
+
+    public ArrayList getNames(){
+        return this.nameList;
+    }
+
+    public void getAddressBooks ()
+    {
+        //주소록 가져오는 부분
+        nameList = new ArrayList();
+        numberList = new ArrayList();
+
+        Cursor c = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI,
+                null,null,null,
+                ContactsContract.Contacts.DISPLAY_NAME_PRIMARY + " asc");
+
+        while(c.moveToNext()){
+            //연락처 id 값
+            String id = c.getString(c.getColumnIndex(ContactsContract.Contacts._ID)); // 아이디 가져온다.
+            String name = c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)); //이름을 가져온다.
+            nameList.add(name);
+
+            Cursor phoneCursor = getContentResolver().query(
+                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                    null,
+                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + id,
+                    null,null);
+
+            if(phoneCursor.moveToNext()){
+                String number = phoneCursor.getString(phoneCursor.getColumnIndex(
+                        ContactsContract.CommonDataKinds.Phone.NUMBER));
+                Log.d("Test number",number);
+                numberList.add(number);
+            }
+            phoneCursor.close();
+        }
+        c.close();
+
+    }
+    public ArrayList getNumbers(){
+        return this.numberList;
     }
 }

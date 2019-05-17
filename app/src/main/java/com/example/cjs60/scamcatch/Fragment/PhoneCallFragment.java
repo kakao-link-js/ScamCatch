@@ -52,7 +52,7 @@ public class PhoneCallFragment extends Fragment {
         view.findViewById(R.id.zerobtn).setOnClickListener(onClickListener);
         view.findViewById(R.id.callbtn).setOnClickListener(onClickListener);
         view.findViewById(R.id.delbtn).setOnClickListener(onClickListener);
-        callText = (TextView)view.findViewById(R.id.callEditText);
+        callText = (TextView)view.findViewById(R.id.callEditText);//레이아웃과 코드변수간 연결시켜줌
     }
     //버튼 클릭 이벤트를 담은 메소드.
     Button.OnClickListener onClickListener = new Button.OnClickListener(){
