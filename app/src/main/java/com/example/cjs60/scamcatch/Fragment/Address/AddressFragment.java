@@ -1,4 +1,4 @@
-package com.example.workbench.VoiceShow.MainFragment.Address;
+package com.example.cjs60.scamcatch.Fragment.Address;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,8 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.example.workbench.VoiceShow.MainActivity;
-import com.example.workbench.VoiceShow.R;
+import com.example.cjs60.scamcatch.MainActivity;
+import com.example.cjs60.scamcatch.R;
+
 
 import java.util.ArrayList;
 

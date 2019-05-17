@@ -1,4 +1,4 @@
-package com.example.workbench.VoiceShow.MainFragment.Address;
+package com.example.cjs60.scamcatch.Fragment.Address;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,12 +12,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.workbench.VoiceShow.R;
+import com.example.cjs60.scamcatch.R;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class AddressListViewAdapter extends BaseAdapter{
+public class AddressListViewAdapter extends BaseAdapter {
 
     //Adapter에 추가된 데이터를 저장하기 위한 ArrayList
     private ArrayList<AddressListViewItem> addressListViewItems = new ArrayList<AddressListViewItem>();

@@ -1,31 +1,33 @@
 package com.example.cjs60.scamcatch.Fragment;
 
+import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TableLayout;
 
 import com.example.cjs60.scamcatch.R;
 
+import java.util.ArrayList;
+
 public class ContactListFragment extends Fragment {
+    private String          mPhoneNumber;                           // 핸드폰 번호 문자열
 
-    View view;
+    //전화번호부 가져오기위한 리스트
+    private ArrayList<String> nameList;
+    private ArrayList<String> numberList;
 
-    @Override //프래그먼트 생성시에 한번 실행되는 메소드
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+    TableLayout             mKeyPadLayout;
 
-    @Override //프래그먼트 생성시에 뷰(화면)를 구성하는 메소드
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.contact_layout,null); //view를 불러온다.
-        SetLayout(view);
-
-        return view;
-    }
-
-    public void SetLayout(View view){
 
     }
-}
+
+
+
+
+
+
