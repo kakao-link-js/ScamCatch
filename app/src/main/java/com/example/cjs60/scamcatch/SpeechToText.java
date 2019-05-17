@@ -13,8 +13,9 @@ import java.util.concurrent.Future;
 
 public class SpeechToText extends AsyncTask {
 
-    private static String speechSubscriptionKey = "2d47191c07c64a6aa14624bde86e8950";
-    private static String serviceRegion = "westus";
+    private static String speechSubscriptionKey = "920e15067413402fbbde3f577f92a796";
+    private static String serviceRegion = "koreacentral";
+    private String TAG = "STT";
     public String txt;
     public TextView stt;
 
@@ -27,26 +28,32 @@ public class SpeechToText extends AsyncTask {
             try {
                 SpeechConfig config = SpeechConfig.fromSubscription(speechSubscriptionKey, serviceRegion);
                 assert (config != null);
+                Log.d(TAG,"1");
 
                 SpeechRecognizer reco = new SpeechRecognizer(config);
                 assert (reco != null);
+                Log.d(TAG,"2");
 
                 Future<SpeechRecognitionResult> task = reco.recognizeOnceAsync();
                 assert (task != null);
+                Log.d(TAG,"3");
 
                 SpeechRecognitionResult result = task.get();
                 assert (result != null);
+                Log.d(TAG,"4");
 
                 if (result.getReason() == ResultReason.RecognizedSpeech) {
                     txt = result.toString();
                 } else {
                     txt = result.toString();
                 }
+                Log.d(TAG,txt);
+
                 txt = txt.substring(txt.indexOf('<')+1,txt.indexOf('>'));
                 stt.setText(stt.getText() + txt);
                 reco.close();
             } catch (Exception ex) {
-                Log.e("SpeechSDKDemo", "unexpected " + ex.getMessage());
+                Log.d(TAG,"unexpected " + ex.getMessage());
                 assert (false);
             }
         }
