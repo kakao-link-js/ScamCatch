@@ -8,6 +8,7 @@ import android.os.Message;
 import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -32,6 +33,7 @@ public class CallActivity extends AppCompatActivity {
     public long myBaseTime;
     public SpeechToText speechToText;
     public NetworkTask networkTask;
+    public String TAG = "CallActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +47,7 @@ public class CallActivity extends AppCompatActivity {
         myTimer.sendEmptyMessage(0);
         int requestCode = 5; // unique code for the permission request
         ActivityCompat.requestPermissions(this, new String[]{RECORD_AUDIO, INTERNET}, requestCode);
-        speechToText = new SpeechToText(stt);
+        speechToText = new SpeechToText(this);
         speechToText.execute();
     }
     @Override
@@ -62,7 +64,6 @@ public class CallActivity extends AppCompatActivity {
         timer = (TextView)findViewById(R.id.timer);
         phoneNum = (TextView)findViewById(R.id.phoneNum);
         stt = (TextView)findViewById(R.id.speechToText);
-        findViewById(R.id.send).setOnClickListener(onClickListener);
     }
 
     //버튼 클릭 이벤트를 담은 메소드.
@@ -77,9 +78,6 @@ public class CallActivity extends AppCompatActivity {
                         speechToText.cancel(true);
                     finish();
                     break;
-                case R.id.send:
-                    sendToServer();
-                    break;
             }
         }
     };
@@ -88,6 +86,11 @@ public class CallActivity extends AppCompatActivity {
         Intent intent = getIntent();
         phone = intent.getStringExtra("phone");
         phoneNum.setText(phone.substring(0,3)+'-'+phone.substring(3,7)+'-'+phone.substring(7,11));
+    }
+
+    public void ChangeSTTText(String addData){
+        stt.setText(stt.getText() + addData);
+        sendToServer();
     }
 
 
@@ -109,21 +112,22 @@ public class CallActivity extends AppCompatActivity {
     }
 
     //서버에 요청할 데이터
-    private JSONObject FormatingData(String myNum, String yourNum){
+    private JSONObject FormatingData(String text, String phoneNumber){
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.accumulate("my_phone_num", myNum);
-            jsonObject.accumulate("opponent_phone_num", yourNum);
+            jsonObject.accumulate("text", text);
+            jsonObject.accumulate("current_id", phoneNumber);
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        Log.d(TAG,phoneNumber + " : "+ text);
         return jsonObject;
     }
 
     private void sendToServer() {
-        String url = "http://52.247.220.74/test";
+        String url = "http://52.247.220.74/accuracy";
 
-        JSONObject jsonObject = FormatingData("01012341234", "01046589742");
+        JSONObject jsonObject = FormatingData((String) stt.getText(), (String) phoneNum.getText());
         networkTask = new NetworkTask(getApplicationContext(), url, jsonObject);
         try {
             String result = networkTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();

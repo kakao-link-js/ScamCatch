@@ -17,10 +17,10 @@ public class SpeechToText extends AsyncTask {
     private static String serviceRegion = "koreacentral";
     private String TAG = "STT";
     public String txt;
-    public TextView stt;
+    public CallActivity callActivity;
 
-    public SpeechToText(TextView stt2){
-        stt = stt2;
+    public SpeechToText(CallActivity callActivity1){
+        callActivity = callActivity1;
     }
     @Override
     protected Object doInBackground(Object[] objects) {
@@ -50,7 +50,7 @@ public class SpeechToText extends AsyncTask {
                 Log.d(TAG,txt);
 
                 txt = txt.substring(txt.indexOf('<')+1,txt.indexOf('>'));
-                stt.setText(stt.getText() + txt);
+                callActivity.ChangeSTTText(txt);
                 reco.close();
             } catch (Exception ex) {
                 Log.d(TAG,"unexpected " + ex.getMessage());

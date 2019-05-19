@@ -37,6 +37,7 @@
 
         <Button
             android:id="@+id/keyPadbtn"
+            style="@android:style/Widget.Holo.Light.Button.Borderless.Small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -45,6 +46,7 @@
 
         <Button
             android:id="@+id/recentbtn"
+            style="@android:style/Widget.Holo.Light.Button.Borderless.Small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -52,6 +54,7 @@
 
         <Button
             android:id="@+id/contactbtn"
+            style="@android:style/Widget.Holo.Light.Button.Borderless.Small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -59,6 +62,7 @@
 
         <Button
             android:id="@+id/settingbtn"
+            style="@android:style/Widget.Holo.Light.Button.Borderless.Small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
