@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 )
             ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.CALL_PHONE,//전화거는 퍼미션
                     Manifest.permission.READ_CALL_LOG, //기록받아오는 퍼미션
+
                     Manifest.permission.RECORD_AUDIO, //오디오기록 퍼미션
                     Manifest.permission.READ_PHONE_STATE, //전화 상태를 읽을 수 있는 퍼미션
                     Manifest.permission.READ_CONTACTS

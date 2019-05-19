@@ -2,25 +2,54 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="350dp"
     android:layout_height="wrap_content"
-    android:background="@drawable/backborder"
-    android:gravity="center"
+    android:background="#4DFFFFFF"
+    android:gravity="left|center"
     android:orientation="vertical"
     android:padding="16dp">
 
-    <ImageView
-        android:id="@+id/imageView"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="1"
-        app:srcCompat="@drawable/warning" />
+        android:gravity="top"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_close"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#00FFFFFF"
+            android:fontFamily="@font/dx"
+            android:gravity="center"
+            android:text="X"
+            android:textColor="#000000"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#00000000"
+            android:fontFamily="@font/dx"
+            android:gravity="center"
+            android:text="Warning"
+            android:textColor="#000000"
+            android:textSize="50sp" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tv_call_number"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:fontFamily="@font/dx"
+        android:gravity="center"
         android:text="000-0000-0000"
         android:textColor="#000000"
         android:textSize="40sp" />
@@ -29,26 +58,31 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/btn_call"
+        <TextView
+            android:id="@+id/susPiNum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/greenback"
-            android:text="통화"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="20dp" />
+            android:layout_weight="1"
+            android:fontFamily="@font/dx"
+            android:gravity="right"
+            android:text="5"
+            android:textColor="#ff0000"
+            android:textSize="30sp"
+            android:layout_margin="5dp"/>
 
-        <Button
-            android:id="@+id/btn_close"
+        <TextView
+            android:id="@+id/textView5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/redback"
-            android:text="취소"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="20dp" />
+            android:layout_weight="1"
+            android:fontFamily="@font/dx"
+            android:gravity="left"
+            android:text="Suspicion"
+            android:textColor="#000000"
+            android:textSize="30sp"
+            android:layout_margin="5dp"/>
     </LinearLayout>
 
 </LinearLayout>

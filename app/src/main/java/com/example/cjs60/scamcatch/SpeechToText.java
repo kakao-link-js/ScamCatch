@@ -56,6 +56,10 @@ public class SpeechToText extends AsyncTask {
                 Log.d(TAG,"unexpected " + ex.getMessage());
                 assert (false);
             }
+            if(isCancelled())
+                break;
         }
+        Log.d(TAG,"end SpeechToText");
+        return null;
     }
 }

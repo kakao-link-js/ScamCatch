@@ -51,7 +51,7 @@ public class CallActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(networkTask.getStatus() == AsyncTask.Status.RUNNING)
+        if(networkTask != null && networkTask.getStatus() == AsyncTask.Status.RUNNING)
             networkTask.cancel(true);
         if(speechToText.getStatus() == AsyncTask.Status.RUNNING)
             speechToText.cancel(true);
@@ -71,7 +71,7 @@ public class CallActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.endCallBtn:
-                    if(networkTask.getStatus() == AsyncTask.Status.RUNNING)
+                    if(networkTask != null && networkTask.getStatus() == AsyncTask.Status.RUNNING)
                         networkTask.cancel(true);
                     if(speechToText.getStatus() == AsyncTask.Status.RUNNING)
                         speechToText.cancel(true);
