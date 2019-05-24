@@ -32,8 +32,17 @@ public class CallActivity extends AppCompatActivity {
     public String phone;
     public long myBaseTime;
     public SpeechToText speechToText;
-    public NetworkTask networkTask;
+
     public String TAG = "CallActivity";
+
+    Handler myTimer = new Handler(){
+        public void handleMessage(Message msg){
+            timer.setText(getTimeOut());
+
+            //sendEmptyMessage 는 비어있는 메세지를 Handler 에게 전송하는겁니다.
+            myTimer.sendEmptyMessage(0);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,14 +56,12 @@ public class CallActivity extends AppCompatActivity {
         myTimer.sendEmptyMessage(0);
         int requestCode = 5; // unique code for the permission request
         ActivityCompat.requestPermissions(this, new String[]{RECORD_AUDIO, INTERNET}, requestCode);
-        speechToText = new SpeechToText(this);
+        speechToText = new SpeechToText(this,stt,phoneNum);
         speechToText.execute();
     }
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(networkTask != null && networkTask.getStatus() == AsyncTask.Status.RUNNING)
-            networkTask.cancel(true);
         if(speechToText.getStatus() == AsyncTask.Status.RUNNING)
             speechToText.cancel(true);
     }
@@ -72,8 +79,6 @@ public class CallActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.endCallBtn:
-                    if(networkTask != null && networkTask.getStatus() == AsyncTask.Status.RUNNING)
-                        networkTask.cancel(true);
                     if(speechToText.getStatus() == AsyncTask.Status.RUNNING)
                         speechToText.cancel(true);
                     finish();
@@ -88,20 +93,7 @@ public class CallActivity extends AppCompatActivity {
         phoneNum.setText(phone.substring(0,3)+'-'+phone.substring(3,7)+'-'+phone.substring(7,11));
     }
 
-    public void ChangeSTTText(String addData){
-        stt.setText(stt.getText() + addData);
-        sendToServer();
-    }
 
-
-    Handler myTimer = new Handler(){
-        public void handleMessage(Message msg){
-            timer.setText(getTimeOut());
-
-            //sendEmptyMessage 는 비어있는 메세지를 Handler 에게 전송하는겁니다.
-            myTimer.sendEmptyMessage(0);
-        }
-    };
 
     //현재시간을 계속 구해서 출력하는 메소드
     String getTimeOut(){
@@ -111,29 +103,6 @@ public class CallActivity extends AppCompatActivity {
         return easy_outTime;
     }
 
-    //서버에 요청할 데이터
-    private JSONObject FormatingData(String text, String phoneNumber){
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.accumulate("text", text);
-            jsonObject.accumulate("current_id", phoneNumber);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        Log.d(TAG,phoneNumber + " : "+ text);
-        return jsonObject;
-    }
 
-    private void sendToServer() {
-        String url = "http://52.247.220.74/accuracy";
 
-        JSONObject jsonObject = FormatingData((String) stt.getText(), (String) phoneNum.getText());
-        networkTask = new NetworkTask(getApplicationContext(), url, jsonObject);
-        try {
-            String result = networkTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
-            Toast.makeText(this,"result : "+ result,Toast.LENGTH_SHORT).show();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
 }
