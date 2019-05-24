@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
         phoneCallFragment = new PhoneCallFragment(this); //PhoneCallFragment로 넘어가기 위한 객체 생성
         recentCallListFragment = new RecentCallListFragment(); //객체 생성
-        settingFragment = new SettingFragment(); //객체 생성
+        settingFragment = new SettingFragment(this); //객체 생성
         contactListFragment = new AddressFragment(); //객체 생성
 
         getAddressBooks();

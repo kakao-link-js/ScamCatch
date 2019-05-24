@@ -16,6 +16,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".PopUpActivity" android:theme="@android:style/Theme.Dialog" />
         <activity android:name=".CallActivity"/>
         <receiver
             android:name=".IncomingCallBroadcastReceiver">
