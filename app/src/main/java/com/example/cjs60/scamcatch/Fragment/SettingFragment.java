@@ -43,10 +43,6 @@ public class SettingFragment extends Fragment {
         view.findViewById(R.id.uisimBtn).setOnClickListener(onClickListener);
         aSwitch = (Switch)view.findViewById(R.id.switchBtn);
 
-
-
-
-
         sharedPreferences = getContext().getSharedPreferences("sFile",0);
         SetSwitchBtn();
         return view;

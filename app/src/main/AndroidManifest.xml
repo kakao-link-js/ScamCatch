@@ -17,15 +17,15 @@
             </intent-filter>
         </activity>
         <activity android:name=".PopUpActivity" android:theme="@android:style/Theme.Dialog" />
-        <activity android:name=".CallActivity"/>
+        <activity android:name=".CallFunction.CallActivity"/>
         <receiver
-            android:name=".IncomingCallBroadcastReceiver">
+            android:name=".CallFunction.IncomingCallBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
                 <action android:name="android.intent.action.PHONE_STATE" />
             </intent-filter>
         </receiver>
-        <service android:name=".CallingService"/>
+        <service android:name=".CallFunction.CallingService"/>
     </application>
     <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.READ_CALL_LOG"/>
@@ -33,4 +33,5 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
 </manifest>

@@ -1,4 +1,4 @@
-package com.example.cjs60.scamcatch;
+package com.example.cjs60.scamcatch.CallFunction;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -15,7 +15,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.example.cjs60.scamcatch.R;
 import com.example.cjs60.scamcatch.Server.NetworkTask;
+import com.example.cjs60.scamcatch.SpeechToText;
 
 import org.json.JSONException;
 import org.json.JSONObject;

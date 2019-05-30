@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.cjs60.scamcatch.CallFunction.CallActivity;
 import com.example.cjs60.scamcatch.Fragment.Address.AddressFragment;
 import com.example.cjs60.scamcatch.Fragment.PhoneCallFragment;
 import com.example.cjs60.scamcatch.Fragment.RecentCallListFragment;
@@ -66,14 +67,15 @@ public class MainActivity extends AppCompatActivity {
                 ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_DENIED||
                 ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_DENIED||
                 ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_DENIED||
-                ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_DENIED
+                ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_DENIED||
+                ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.INTERNET)==PackageManager.PERMISSION_DENIED
                 )
             ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.CALL_PHONE,//전화거는 퍼미션
                     Manifest.permission.READ_CALL_LOG, //기록받아오는 퍼미션
-
                     Manifest.permission.RECORD_AUDIO, //오디오기록 퍼미션
                     Manifest.permission.READ_PHONE_STATE, //전화 상태를 읽을 수 있는 퍼미션
-                    Manifest.permission.READ_CONTACTS
+                    Manifest.permission.READ_CONTACTS, //주소록을 받아오는 퍼미션
+                    Manifest.permission.INTERNET //인터넷 사용권한을 가져온다.
             },0);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { // SDK26 이상 부터 다른위에 그리기 권한 가져와야함
             if (!Settings.canDrawOverlays(getApplicationContext())) {

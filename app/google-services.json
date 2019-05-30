@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "587026686176",
+    "firebase_url": "https://scamcatch-a6e47.firebaseio.com",
+    "project_id": "scamcatch-a6e47",
+    "storage_bucket": "scamcatch-a6e47.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:587026686176:android:2faffa6478bfb829",
+        "android_client_info": {
+          "package_name": "com.example.cjs60.scamcatch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "587026686176-09f9t9d3shunqnjhbvqkqqegvdh5truv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOMLsJc9BZMk_2MxiI2Co6L_rCwJyih10"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "587026686176-09f9t9d3shunqnjhbvqkqqegvdh5truv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

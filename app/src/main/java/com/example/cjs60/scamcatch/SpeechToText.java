@@ -3,8 +3,8 @@ package com.example.cjs60.scamcatch;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.cjs60.scamcatch.CallFunction.CallActivity;
 import com.example.cjs60.scamcatch.Server.NetworkTask;
 import com.microsoft.cognitiveservices.speech.ResultReason;
 import com.microsoft.cognitiveservices.speech.SpeechConfig;

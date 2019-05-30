@@ -1,4 +1,4 @@
-package com.example.cjs60.scamcatch;
+package com.example.cjs60.scamcatch.CallFunction;
 
 import android.app.Service;
 import android.content.Intent;
@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.example.cjs60.scamcatch.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

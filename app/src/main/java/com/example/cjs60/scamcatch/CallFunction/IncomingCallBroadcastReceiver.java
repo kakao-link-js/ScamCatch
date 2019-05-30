@@ -1,17 +1,15 @@
-package com.example.cjs60.scamcatch;
+package com.example.cjs60.scamcatch.CallFunction;
 
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.media.AudioManager;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.telephony.PhoneNumberUtils;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.widget.Toast;
+
+import com.example.cjs60.scamcatch.CallFunction.CallingService;
 
 public class IncomingCallBroadcastReceiver extends BroadcastReceiver {
 
@@ -22,12 +20,14 @@ public class IncomingCallBroadcastReceiver extends BroadcastReceiver {
     // incoming 수신 플래그
     private static boolean incomingFlag = true; //첫번째 브로드케스트에서는 값이 안와서 한번 다시 켜기위한 변수
     private static boolean callState; //통화를 받으면 true 로 바껴서 브로드캐스트를 또 안만듬
-    public CallingService callingService;
-    //
+    SharedPreferences sharedPreferences;
     Bundle bundle;
     @Override
     public void onReceive(final Context context, Intent intent) {
         bundle = intent.getExtras();
+        sharedPreferences = context.getSharedPreferences("sFile",0);
+        if(!sharedPreferences.getBoolean("alarm",false))
+            return;
         if(incomingFlag){
             callState = false;
             incomingFlag = false;
