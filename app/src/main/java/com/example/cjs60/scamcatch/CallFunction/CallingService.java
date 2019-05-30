@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.cjs60.scamcatch.Firebase.ConnectFirebase;
 import com.example.cjs60.scamcatch.R;
 
 import butterknife.BindView;
@@ -26,10 +27,12 @@ public class CallingService extends Service {
     protected View rootView;
     public static boolean itIsOpen = false;
     public String TAG = "CallingService";
+    public ConnectFirebase connectFirebase;
 
 
     @BindView(R.id.tv_call_number)
     TextView tv_call_number;
+    TextView suspiNum;
     Button btn;
 
     String call_number;
@@ -51,8 +54,9 @@ public class CallingService extends Service {
         Log.d(TAG,"start onCreate");
 
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-
         Display display = windowManager.getDefaultDisplay();
+
+        connectFirebase = new ConnectFirebase();
 
         int width = (int) (display.getWidth() * 0.9); //Display 사이즈의 90%
 
@@ -69,6 +73,8 @@ public class CallingService extends Service {
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         rootView = layoutInflater.inflate(R.layout.called_layout, null);
         tv_call_number = (TextView)rootView.findViewById(R.id.tv_call_number);
+        suspiNum = (TextView)rootView.findViewById(R.id.susPiNum);
+
         rootView.findViewById(R.id.btn_close).setOnClickListener(onClickListener);
         ButterKnife.bind(this, rootView);
         setDraggable();
@@ -118,6 +124,8 @@ public class CallingService extends Service {
         setExtra(intent);
         if (!TextUtils.isEmpty(call_number)) {
             tv_call_number.setText(call_number);
+            Log.d(TAG,"get Call number "+call_number+ " Count : "+connectFirebase.GetReportCount(call_number));
+            //suspiNum.setText(String.valueOf(connectFirebase.GetReportCount(call_number)));
         }
         Log.d(TAG,"end onStartCommand call_number : " +call_number);
         return START_REDELIVER_INTENT;

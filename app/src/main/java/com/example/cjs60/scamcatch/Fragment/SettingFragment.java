@@ -15,6 +15,7 @@ import android.widget.Switch;
 import android.widget.Toast;
 import android.content.SharedPreferences;
 
+import com.example.cjs60.scamcatch.Firebase.ConnectFirebase;
 import com.example.cjs60.scamcatch.MainActivity;
 import com.example.cjs60.scamcatch.PopUpActivity;
 import com.example.cjs60.scamcatch.R;
@@ -25,6 +26,8 @@ public class SettingFragment extends Fragment {
     MainActivity mainActivity;
     SharedPreferences sharedPreferences;
     Switch aSwitch;
+
+    ConnectFirebase connectFirebase;
 
     @SuppressLint("ValidFragment")
     public SettingFragment(MainActivity mActivity){ //PhoneCallFragment 생성자 (생성자란 이 클래스가 만들어질때 무조건 실행됨)
@@ -40,9 +43,12 @@ public class SettingFragment extends Fragment {
     @Override //프래그먼트 생성시에 뷰(화면)를 구성하는 메소드
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.setting_frgment,null); //view를 불러온다.
-        view.findViewById(R.id.uisimBtn).setOnClickListener(onClickListener);
-        aSwitch = (Switch)view.findViewById(R.id.switchBtn);
 
+        connectFirebase = new ConnectFirebase();
+
+        view.findViewById(R.id.uisimBtn).setOnClickListener(onClickListener);
+        view.findViewById(R.id.helpBtn).setOnClickListener(onClickListener);
+        aSwitch = (Switch)view.findViewById(R.id.switchBtn);
         sharedPreferences = getContext().getSharedPreferences("sFile",0);
         SetSwitchBtn();
         return view;
@@ -54,6 +60,11 @@ public class SettingFragment extends Fragment {
             switch (v.getId()) {
                 case R.id.uisimBtn:
                     mOnPopupClick(view);
+                    break;
+                case R.id.helpBtn:
+                    int count = connectFirebase.GetReportCount("01051306027");
+                    connectFirebase.SendReport("01051306027",count);
+                    Toast.makeText(getContext(),connectFirebase.GetReportDate("01051306027"),Toast.LENGTH_LONG).show();
                     break;
             }
         }

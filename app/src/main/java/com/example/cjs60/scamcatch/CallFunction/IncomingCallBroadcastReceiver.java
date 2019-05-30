@@ -25,9 +25,9 @@ public class IncomingCallBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(final Context context, Intent intent) {
         bundle = intent.getExtras();
-        sharedPreferences = context.getSharedPreferences("sFile",0);
-        if(!sharedPreferences.getBoolean("alarm",false))
-            return;
+        //sharedPreferences = context.getSharedPreferences("sFile",0);
+        //if(!sharedPreferences.getBoolean("alarm",false))
+        //    return;
         if(incomingFlag){
             callState = false;
             incomingFlag = false;
