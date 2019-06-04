@@ -3,8 +3,10 @@ package com.example.cjs60.scamcatch;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.cjs60.scamcatch.CallFunction.CallActivity;
+import com.example.cjs60.scamcatch.Firebase.ConnectFirebase;
 import com.example.cjs60.scamcatch.Server.NetworkTask;
 import com.microsoft.cognitiveservices.speech.ResultReason;
 import com.microsoft.cognitiveservices.speech.SpeechConfig;
@@ -25,12 +27,16 @@ public class SpeechToText extends AsyncTask {
     public CallActivity callActivity;
     public NetworkTask networkTask;
     public TextView m_textView;
-    public TextView phoneNum;
+    public String phoneNum;
+    public ConnectFirebase connectFirebase;
+    public TextView m_accuracy;
 
-    public SpeechToText(CallActivity callActivity1,TextView textView,TextView m_phoneNum){
+    public SpeechToText(CallActivity callActivity1,TextView textView,String number,TextView accuracy){
         callActivity = callActivity1;
         m_textView = textView;
-        phoneNum = m_phoneNum;
+        phoneNum = number;
+        m_accuracy = accuracy;
+        connectFirebase = new ConnectFirebase();
     }
     @Override
     protected Object doInBackground(Object[] objects) {
@@ -62,6 +68,7 @@ public class SpeechToText extends AsyncTask {
                 txt = txt.substring(txt.indexOf('<')+1,txt.indexOf('>'));
                 m_textView.setText(m_textView.getText() +" "+ txt);
                 sendToServer((String) m_textView.getText());
+                m_accuracy.setText(String.valueOf(connectFirebase.GetAccuracy(phoneNum)));
                 reco.close();
             } catch (Exception ex) {
                 Log.d(TAG,"unexpected " + ex.getMessage());
@@ -76,7 +83,7 @@ public class SpeechToText extends AsyncTask {
     private void sendToServer(String txt) {
         String url = "http://52.247.220.74/accuracy";
 
-        JSONObject jsonObject = FormatingData(txt, (String) phoneNum.getText());
+        JSONObject jsonObject = FormatingData(txt, phoneNum);
         networkTask = new NetworkTask(callActivity, url, jsonObject);
         try {
             networkTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

@@ -18,6 +18,7 @@
         </activity>
         <activity android:name=".PopUpActivity" android:theme="@android:style/Theme.Dialog" />
         <activity android:name=".CallFunction.CallActivity"/>
+        <activity android:name=".PopUpAccuracyActivity" android:theme="@android:style/Theme.Dialog"/>
         <receiver
             android:name=".CallFunction.IncomingCallBroadcastReceiver">
             <intent-filter>

@@ -1,6 +1,7 @@
 package com.example.cjs60.scamcatch.CallFunction;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,6 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.example.cjs60.scamcatch.Firebase.ConnectFirebase;
+import com.example.cjs60.scamcatch.PopUpAccuracyActivity;
+import com.example.cjs60.scamcatch.PopUpActivity;
 import com.example.cjs60.scamcatch.R;
 import com.example.cjs60.scamcatch.Server.NetworkTask;
 import com.example.cjs60.scamcatch.SpeechToText;
@@ -31,15 +35,24 @@ public class CallActivity extends AppCompatActivity {
     public TextView timer;
     public TextView phoneNum;
     public TextView stt;
+    public TextView accuracy;
     public String phone;
     public long myBaseTime;
     public SpeechToText speechToText;
+    public double setAccuracy;
+    private boolean popUpOpen = false;
+    SharedPreferences sharedPreferences;
+    ConnectFirebase connectFirebase;
 
     public String TAG = "CallActivity";
 
     Handler myTimer = new Handler(){
         public void handleMessage(Message msg){
             timer.setText(getTimeOut());
+            if(Double.parseDouble((String) accuracy.getText()) >= setAccuracy && !popUpOpen ){
+                Log.d(TAG,"startPopUp : "+accuracy.getText() +" // setAccuracy : " + setAccuracy);
+                mOnPopup();
+            }
 
             //sendEmptyMessage 는 비어있는 메세지를 Handler 에게 전송하는겁니다.
             myTimer.sendEmptyMessage(0);
@@ -50,15 +63,17 @@ public class CallActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.call_activity);
-
+        popUpOpen = false;
+        connectFirebase = new ConnectFirebase();
         SetLayout();
         SetPhoneNum();
-
+        sharedPreferences = getSharedPreferences("sFile",0);
+        setAccuracy = Double.parseDouble(sharedPreferences.getString("percent","80"));
         myBaseTime = SystemClock.elapsedRealtime();
         myTimer.sendEmptyMessage(0);
         int requestCode = 5; // unique code for the permission request
         ActivityCompat.requestPermissions(this, new String[]{RECORD_AUDIO, INTERNET}, requestCode);
-        speechToText = new SpeechToText(this,stt,phoneNum);
+        speechToText = new SpeechToText(this,stt,phone,accuracy);
         speechToText.execute();
     }
     @Override
@@ -73,6 +88,7 @@ public class CallActivity extends AppCompatActivity {
         timer = (TextView)findViewById(R.id.timer);
         phoneNum = (TextView)findViewById(R.id.phoneNum);
         stt = (TextView)findViewById(R.id.speechToText);
+        accuracy = (TextView)findViewById(R.id.accuracyText);
     }
 
     //버튼 클릭 이벤트를 담은 메소드.
@@ -81,13 +97,35 @@ public class CallActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.endCallBtn:
-                    if(speechToText.getStatus() == AsyncTask.Status.RUNNING)
-                        speechToText.cancel(true);
-                    finish();
+                    CloseActivity();
                     break;
             }
         }
     };
+
+    public void mOnPopup(){
+        popUpOpen = true;
+        View v = getWindow().getDecorView();
+        Toast.makeText(this, "mOnPopUp", Toast.LENGTH_LONG).show();
+        //데이터 담아서 팝업(액티비티) 호출
+        Intent intent = new Intent(this, PopUpAccuracyActivity.class);
+        intent.putExtra("accuracy", accuracy.getText());
+        startActivityForResult(intent, 1);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode==1){
+            String result = data.getStringExtra("result");
+            if(result == "No")
+                Toast.makeText(this,"Not Report",Toast.LENGTH_SHORT).show();
+            else{
+                int count = connectFirebase.GetReportCount(phone);
+                connectFirebase.SendReport(phone,count);
+                CloseActivity();
+            }
+        }
+    }
 
     public void SetPhoneNum(){
         Intent intent = getIntent();
@@ -95,8 +133,11 @@ public class CallActivity extends AppCompatActivity {
         phoneNum.setText(phone.substring(0,3)+'-'+phone.substring(3,7)+'-'+phone.substring(7,11));
     }
 
-
-
+    public void CloseActivity(){
+        if(speechToText.getStatus() == AsyncTask.Status.RUNNING)
+            speechToText.cancel(true);
+        finish();
+    }
     //현재시간을 계속 구해서 출력하는 메소드
     String getTimeOut(){
         long now = SystemClock.elapsedRealtime(); //애플리케이션이 실행되고나서 실제로 경과된 시간(??)^^;
