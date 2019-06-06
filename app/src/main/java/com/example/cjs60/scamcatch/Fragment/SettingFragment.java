@@ -62,9 +62,6 @@ public class SettingFragment extends Fragment {
                     mOnPopupClick(view);
                     break;
                 case R.id.helpBtn:
-                    int count = connectFirebase.GetReportCount("01051306027");
-                    connectFirebase.SendReport("01051306027",count);
-                    Toast.makeText(getContext(),connectFirebase.GetReportDate("01051306027"),Toast.LENGTH_LONG).show();
                     break;
             }
         }

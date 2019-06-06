@@ -45,14 +45,6 @@
             android:text="키패드" />
 
         <Button
-            android:id="@+id/recentbtn"
-            style="@android:style/Widget.Holo.Light.Button.Borderless.Small"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="통화기록" />
-
-        <Button
             android:id="@+id/contactbtn"
             style="@android:style/Widget.Holo.Light.Button.Borderless.Small"
             android:layout_width="match_parent"

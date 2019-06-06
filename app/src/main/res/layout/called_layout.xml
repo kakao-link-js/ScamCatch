@@ -64,13 +64,13 @@
             android:id="@+id/susPiNum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:layout_weight="1"
             android:fontFamily="@font/dx"
             android:gravity="right"
-            android:text="5"
+            android:text="?"
             android:textColor="#ff0000"
-            android:textSize="30sp"
-            android:layout_margin="5dp"/>
+            android:textSize="30sp" />
 
         <TextView
             android:id="@+id/textView5"
@@ -84,5 +84,13 @@
             android:textSize="30sp"
             android:layout_margin="5dp"/>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/lastCall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="lastReport"
+        android:textAlignment="textEnd" />
 
 </LinearLayout>

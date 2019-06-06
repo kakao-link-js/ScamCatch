@@ -33,7 +33,7 @@ public class CallingService extends Service {
     @BindView(R.id.tv_call_number)
     TextView tv_call_number;
     TextView suspiNum;
-    Button btn;
+    TextView lastReport;
 
     String call_number;
 
@@ -41,9 +41,11 @@ public class CallingService extends Service {
     public static int LAYOUT_FLAG =  WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
     private WindowManager windowManager;
 
+
+
     @Override
     public IBinder onBind(Intent intent) {
-
+        Log.d(TAG+"//onBind ","Start ");
         // Not used
         return null;
     }
@@ -51,7 +53,7 @@ public class CallingService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(TAG,"start onCreate");
+        Log.d(TAG+"//onCreate","start onCreate");
 
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         Display display = windowManager.getDefaultDisplay();
@@ -74,6 +76,7 @@ public class CallingService extends Service {
         rootView = layoutInflater.inflate(R.layout.called_layout, null);
         tv_call_number = (TextView)rootView.findViewById(R.id.tv_call_number);
         suspiNum = (TextView)rootView.findViewById(R.id.susPiNum);
+        lastReport = (TextView)rootView.findViewById(R.id.lastCall);
 
         rootView.findViewById(R.id.btn_close).setOnClickListener(onClickListener);
         ButterKnife.bind(this, rootView);
@@ -84,7 +87,7 @@ public class CallingService extends Service {
 
 
     private void setDraggable() {
-        Log.d(TAG,"start setDraggable");
+        Log.d(TAG+"//setDraggable","start");
         rootView.setOnTouchListener(new View.OnTouchListener() {
             private int initialX;
             private int initialY;
@@ -118,16 +121,17 @@ public class CallingService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG,"start onStartCommand");
+        Log.d(TAG+"//setDraggable","start onStartCommand " +"Jaesumnia");
 
-        windowManager.addView(rootView, params);
         setExtra(intent);
+        windowManager.addView(rootView, params);
+
         if (!TextUtils.isEmpty(call_number)) {
             tv_call_number.setText(call_number);
-            Log.d(TAG,"get Call number "+call_number+ " Count : "+connectFirebase.GetReportCount(call_number));
-            //suspiNum.setText(String.valueOf(connectFirebase.GetReportCount(call_number)));
+            connectFirebase.GetReportCountAndShow(call_number,suspiNum);
+            connectFirebase.GetReportDate(call_number,lastReport);
         }
-        Log.d(TAG,"end onStartCommand call_number : " +call_number);
+        Log.d(TAG,"end onStartCommand call_number : " +call_number+"Jaesumnia");
         return START_REDELIVER_INTENT;
     }
 

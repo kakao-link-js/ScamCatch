@@ -30,7 +30,6 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     PhoneCallFragment phoneCallFragment;
-    RecentCallListFragment recentCallListFragment;
     SettingFragment settingFragment;
     AddressFragment contactListFragment;
 
@@ -45,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
         SetLayout(); //레이아웃에 이벤트를 다 걸어준다.
 
         phoneCallFragment = new PhoneCallFragment(this); //PhoneCallFragment로 넘어가기 위한 객체 생성
-        recentCallListFragment = new RecentCallListFragment(); //객체 생성
         settingFragment = new SettingFragment(this); //객체 생성
         contactListFragment = new AddressFragment(); //객체 생성
 
@@ -99,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
     //레이아웃들의 객체와 코드의 변수들을 연결
     public void SetLayout(){
         findViewById(R.id.keyPadbtn).setOnClickListener(onClickListener);//이벤트 연결
-        findViewById(R.id.recentbtn).setOnClickListener(onClickListener);
         findViewById(R.id.contactbtn).setOnClickListener(onClickListener);
         findViewById(R.id.settingbtn).setOnClickListener(onClickListener);
     }
@@ -110,9 +107,6 @@ public class MainActivity extends AppCompatActivity {
             switch (v.getId()){
                 case R.id.keyPadbtn: //keyPadbtn이 눌린경우
                     replaceFragment(phoneCallFragment);
-                    break;
-                case R.id.recentbtn: //recentbtn이 눌린경우
-                    replaceFragment(recentCallListFragment);
                     break;
                 case R.id.contactbtn: //contactbtn이 눌린경우
                     replaceFragment(contactListFragment);

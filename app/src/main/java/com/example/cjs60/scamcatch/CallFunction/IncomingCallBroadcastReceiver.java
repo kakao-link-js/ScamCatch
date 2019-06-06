@@ -14,27 +14,34 @@ import com.example.cjs60.scamcatch.CallFunction.CallingService;
 public class IncomingCallBroadcastReceiver extends BroadcastReceiver {
 
 
-    public static final String TAG = "PHONE STATE";
+    public static final String TAG = "IncomingCallTAG";
     // 전화번호
     private static String phoneNumber = "";
     // incoming 수신 플래그
-    private static boolean incomingFlag = true; //첫번째 브로드케스트에서는 값이 안와서 한번 다시 켜기위한 변수
     private static boolean callState; //통화를 받으면 true 로 바껴서 브로드캐스트를 또 안만듬
     SharedPreferences sharedPreferences;
     Bundle bundle;
+
+
+
     @Override
     public void onReceive(final Context context, Intent intent) {
-        bundle = intent.getExtras();
-        //sharedPreferences = context.getSharedPreferences("sFile",0);
-        //if(!sharedPreferences.getBoolean("alarm",false))
-        //    return;
-        if(incomingFlag){
-            callState = false;
-            incomingFlag = false;
-            return;
-        }else if(callState){
+        sharedPreferences = context.getSharedPreferences("sFile",0);
+        Log.d(TAG,"get sharedPreferences");
+        if(!sharedPreferences.getBoolean("alarm",false)) { //내가 알람설정을 껐을때
+            Log.d(TAG,"alarm sharedPreFernces false");
             return;
         }
+        Log.d(TAG,"Pass AlarmSetting and Phone Num check :" + intent.getStringExtra("incoming_number"));
+        if(intent.getStringExtra("incoming_number") == null){ // 첫전화면 true 두번째부턴 false 밖으로 나감
+            Log.d(TAG,"incomingFlag true");
+            callState = false;
+            return;
+        }else if(callState){
+            Log.d(TAG,"incomingFlag true but callState true");
+            return;
+        }
+        Log.d(TAG,"incomingFlag true and callState false");
 
         //여기까지
 
@@ -42,22 +49,21 @@ public class IncomingCallBroadcastReceiver extends BroadcastReceiver {
         if(intent.getAction().equals(Intent.ACTION_NEW_OUTGOING_CALL)){
             // TODO 전화를 걸었을 떄이다. (안드로이드 낮은 버전에서는 여기로 들어온다)
             this.phoneNumber = bundle.getString("incoming_number");
+            Log.d(TAG,"getPhoneNumber");
         }
         // 폰 상태 체크
+        this.phoneNumber = intent.getStringExtra("incoming_number");
         processPhoneState(intent, context);
     }
 
     private void processPhoneState(Intent intent, Context context){
-        String intentNum ;
         TelephonyManager tm = (TelephonyManager)context.getSystemService(Service.TELEPHONY_SERVICE);
         switch (tm.getCallState()) {
             case TelephonyManager.CALL_STATE_RINGING:
                 // TODO 전화를 왔을때이다. (벨이 울릴때)
-                this.phoneNumber = bundle.getString(TelephonyManager.EXTRA_INCOMING_NUMBER);;
-                intentNum = intent.getStringExtra("incoming_number");
-                Log.d("CallingService", "벨이 울리고 있다. " + phoneNumber + " // intent : "+ intentNum);
+                Log.d("CallingService", "벨이 울리고 있다. " + phoneNumber);
                 if(!CallingService.itIsOpen)
-                    OpenService(intent,context);
+                    OpenService(context);
                 break;
             case TelephonyManager.CALL_STATE_OFFHOOK:
                 callState = true;
@@ -70,12 +76,13 @@ public class IncomingCallBroadcastReceiver extends BroadcastReceiver {
         }
     }
 
-    public void OpenService(Intent intent,Context context){
+    public void OpenService(Context context){
+        Log.d(TAG,"StartOpenService");
         final String phone_number = phoneNumber;
         CallingService.itIsOpen = true;
         Intent serviceIntent = new Intent(context, CallingService.class);
         serviceIntent.putExtra(CallingService.EXTRA_CALL_NUMBER, phone_number);
-        Log.d("CallingService","phone_number : "+phone_number + "  phoneNumber : "+ phoneNumber);
+        Log.d(TAG,"phone_number : "+phone_number);
         context.startForegroundService(serviceIntent);
     }
 

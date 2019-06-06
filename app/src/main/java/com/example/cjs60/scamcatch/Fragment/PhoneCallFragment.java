@@ -95,7 +95,7 @@ public class PhoneCallFragment extends Fragment {
                         callText.setText(text.substring(0, text.length() - 1)); //전체길이에서 1만 뺀다.
                     break;
                 case R.id.callbtn:
-                    if(callText.getText().length()>10) {
+                    if(callText.getText().length()>9) {
                         mainActivity.ChangeCallActivity((String) callText.getText());
                     }
                     else{
