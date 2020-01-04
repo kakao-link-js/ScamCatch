@@ -2,7 +2,8 @@
 
 ------
 
-## ![imge](https://img.shields.io/badge/ProjectType-TeamProject-green) ![imge](https://img.shields.io/badge/Language-Java-yellow) ![imge](https://img.shields.io/badge/Tools-Android Studio-blue)
+## ![imge](https://img.shields.io/badge/ProjectType-TeamProject-green) ![imge](https://img.shields.io/badge/Language-Java-yellow) 
+![imge](https://img.shields.io/badge/Tools-AndroidStudio-blue)
 
 ## 프로그램 소개 :thumbsup:
 
